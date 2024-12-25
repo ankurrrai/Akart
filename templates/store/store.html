@@ -6,7 +6,7 @@
 <!-- ========================= SECTION PAGETOP ========================= -->
 <section class="section-pagetop bg">
     <div class="container">
-        <h2 class="title-page text-center">AKART - STORE</h2>
+        <h2 class="title-page text-center">AKART - WELCOME TO OUR STORE</h2>
         
     </div> <!-- container //  -->
     </section>
@@ -144,7 +144,11 @@
                             <del class="price-old">${{product.price}}</del>
                         </div> <!-- price-wrap.// -->
                     </div>
-                    <a href="#" class="btn btn-block btn-primary">Add to cart </a>
+                    {% if product.stock > 0 %}
+                        <a href="{% url 'add_cart' product.id %}" class="btn btn-block btn-primary">Add to cart </a>
+                    {% else %}
+                        <span class="btn btn-block btn-light disabled">Out of stock</span>
+                    {% endif %}
                 </figcaption>
             </figure>
         </div> <!-- col.// -->
