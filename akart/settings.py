@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # such added apps
     'category',
     'accounts',
     'store',
@@ -66,7 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'category.context_processors.categories_list',
+                'category.context_processors.categories_list', #from here context_processer added
                 'carts.context_processors.get_cart_count'
             ],
         },
@@ -123,6 +124,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# static files setup
 STATIC_URL = '/static/'
 STATIC_ROOT=BASE_DIR /'static'
 STATICFILES_DIRS=[
@@ -130,6 +132,5 @@ STATICFILES_DIRS=[
 ]
 
 # media setup
-
 MEDIA_URL='/media/'
 MEDIA_ROOT=BASE_DIR /'media'

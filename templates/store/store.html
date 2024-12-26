@@ -4,12 +4,13 @@
 {% block content %}
 
 <!-- ========================= SECTION PAGETOP ========================= -->
+
+{% if not 'search' in request.path %}
 <section class="section-pagetop bg">
-    <div class="container">
-        <h2 class="title-page text-center">AKART - WELCOME TO OUR STORE</h2>
-        
-    </div> <!-- container //  -->
-    </section>
+    <div class="container"><h2 class="title-page text-center">AKART - WELCOME TO OUR STORE</h2></div> <!-- container //  -->
+</section>
+{% endif %}
+
     <!-- ========================= SECTION INTRO END// ========================= -->
     
     <!-- ========================= SECTION CONTENT ========================= -->
@@ -127,7 +128,7 @@
     </header><!-- sect-heading -->
     
     <div class="row">
-
+        {% if products %}
         {% for product in products %}
         <div class="col-md-4">
             <figure class="card card-product-grid">
@@ -144,18 +145,20 @@
                             <del class="price-old">${{product.price}}</del>
                         </div> <!-- price-wrap.// -->
                     </div>
-                    {% if product.stock > 0 %}
+                    <a href="{{ product.get_url}}" class="btn btn-block btn-primary">View </a>
+                    <!-- {% if product.stock > 0 %}
                         <a href="{% url 'add_cart' product.id %}" class="btn btn-block btn-primary">Add to cart </a>
                     {% else %}
                         <span class="btn btn-block btn-light disabled">Out of stock</span>
-                    {% endif %}
+                    {% endif %} -->
                 </figcaption>
             </figure>
         </div> <!-- col.// -->
         {% endfor %}
         
-
-        
+        {% else %}
+        <div class="container title wrap mt-2"><h2 class="text-center">Oops! Looks like your item is not with us. Maybe try searching for something else?</h2></div>
+        {% endif %}
 
        
 
@@ -165,13 +168,30 @@
     
     
     <nav class="mt-4" aria-label="Page navigation sample">
+        {% if products.has_other_pages %}
       <ul class="pagination">
-        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        {% if products.has_previous %}
+        <li class="page-item"><a href="?page={{products.previous_page_number}}" class="page-link">Previous</a></li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+        
+        {% for i in products.paginator.page_range %}
+            {% if i == products.number %}
+            <li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if products.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{products.next_page_number}}">Next</a></li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+        
       </ul>
+      {% endif %}
     </nav>
     
         </main> <!-- col.// -->

@@ -29,7 +29,7 @@ def add_to_cart(request,product_id):
             quantity=1
         )
         cart_item.save()
-    return redirect('cart')
+    return redirect('product_details',category_slug=product.category.slug,product_slug=product.slug)
      
 
 def remove_cart(request,product_id):
