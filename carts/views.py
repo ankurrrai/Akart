@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
-from store.models import Product
+from store.models import Product,Variation
 from .models import Cart,CartItem
 
 def _cart_id(request):
@@ -11,31 +11,47 @@ def _cart_id(request):
     return cart_id
 
 def add_to_cart(request,product_id):
-
+    # varition has to add
     product=Product.objects.get(id=product_id) #fetching product with its id
-    cart,created=Cart.objects.get_or_create(cart_id=_cart_id(request=request)) #either get the cart with cart_id (i.e session key) or create with it.
+    product_variation=[]
+    if request.method=='POST':
+        i=1
+        for item in request.POST:
+            key=item.strip()
+            key_value=request.POST[key].strip()
+            if 'csrf' in key:
+                continue
+            variation=Variation.objects.get(product=product,variation_category__iexact=key,variation_value__iexact=key_value,is_active=True)
+            product_variation.append(variation)
+        
+        
 
-    try:
-        cart_item=CartItem.objects.get(
-            product=product,
-            cart=cart
-        )
-        cart_item.quantity+=1
-        cart_item.save()
-    except CartItem.DoesNotExist:
-        cart_item=CartItem.objects.create(
-            product=product,
-            cart=cart,
-            quantity=1
-        )
-        cart_item.save()
-    return redirect('product_details',category_slug=product.category.slug,product_slug=product.slug)
+    
+    cart,created=Cart.objects.get_or_create(cart_id=_cart_id(request=request)) #either get the cart with cart_id (i.e session key) or create with it.
+    cart_item=CartItem.objects.filter(product=product,cart=cart)
+    if cart_item.exists():
+        
+        for item in cart_item:
+            if product_variation == list(item.variations.all()):
+                item.quantity+=1
+                item.save()
+                return redirect ('cart')
+
+        
+    
+    cart_item=CartItem.objects.create(product=product,cart=cart,quantity=1)
+    if len(product_variation)>0:
+        cart_item.variations.clear()
+        for item in product_variation:
+            cart_item.variations.add(item)
+    cart_item.save()
+    return redirect ('cart')
      
 
-def remove_cart(request,product_id):
+def remove_cart(request,product_id,cartItem_id):
     cart=Cart.objects.get(cart_id=_cart_id(request=request))
     product=get_object_or_404(Product,id=product_id)
-    cart_item=CartItem.objects.get(cart=cart,product=product)
+    cart_item=CartItem.objects.get(id=cartItem_id,cart=cart,product=product)
 
     if cart_item.quantity>1:
         cart_item.quantity-=1
@@ -44,10 +60,10 @@ def remove_cart(request,product_id):
         cart_item.delete()
     return redirect('cart')
 
-def remove_cart_item(request,product_id):
+def remove_cart_item(request,product_id,cartItem_id):
     cart=Cart.objects.get(cart_id=_cart_id(request=request))
     product=get_object_or_404(Product,id=product_id)
-    cart_item=CartItem.objects.get(cart=cart,product=product)
+    cart_item=CartItem.objects.get(id=cartItem_id,cart=cart,product=product)
     cart_item.delete()
     return redirect('cart')
 
