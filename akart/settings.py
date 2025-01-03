@@ -27,6 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# read env file
+import environ
+env = environ.Env()
+environ.Env.read_env()
+
+
 
 # Application definition
 
@@ -134,3 +140,22 @@ STATICFILES_DIRS=[
 # media setup
 MEDIA_URL='/media/'
 MEDIA_ROOT=BASE_DIR /'media'
+
+# meassages alert
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: "danger",
+}
+
+# EMAIL Configuration
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# Gmail credentials
+# EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER="akart.alerts@gmail.com"
+EMAIL_HOST_PASSWORD="mixtxygzdlnuafis"
+
+PASSWORD_RESET_TIMEOUT=86400 #1day

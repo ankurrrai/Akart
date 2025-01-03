@@ -1,0 +1,13 @@
+{% autoescape off %}
+
+Hi {{user.first_name}},
+
+Thank you for registered your account with us. Please click here to verify your E-mail ID.
+http://{{domain}}{% url 'activate' uidb64=uid token=token%}
+
+If you think this is not you. Please igonre this email.
+
+Best Regards,
+Akart Team
+
+{% endautoescape %}

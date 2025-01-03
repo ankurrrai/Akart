@@ -51,7 +51,11 @@ $(document).ready(function() {
 		$('[data-toggle="tooltip"]').tooltip()
 	} // end if
 
-
+    // Auto-dismiss alerts after a timeout
+    setTimeout(function(){
+        $('#message').fadeOut('slow')
+    },5000)
+    
 
 
     
