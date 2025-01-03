@@ -2,8 +2,8 @@
 from django.urls import path
 from . import views
 urlpatterns = [
-    path('',view=views.store,name='store'),
-    path('category/<slug:category_slug>/',view=views.store,name='product_by_category'),
-    path('category/<slug:category_slug>/<slug:product_slug>/',view=views.product_details,name='product_details'),
-    path(route='search/',view=views.serach_product,name='serach_product')
+    path('',view=views.store,name='store'), #render store page with all available product
+    path('category/<slug:category_slug>/',view=views.store,name='product_by_category'), #render store page with all product within selected category.
+    path('category/<slug:category_slug>/<slug:product_slug>/',view=views.product_details,name='product_details'), #render project_details with selected product
+    path(route='search/',view=views.serach_product,name='serach_product'), #render store page with all found products with keyword such in category and product
 ]

@@ -11,7 +11,7 @@ def _cart_id(request):
     return cart_id
 
 def add_to_cart(request,product_id):
-    # varition has to add
+
     product=Product.objects.get(id=product_id) #fetching product with its id
     product_variation=[]
     if request.method=='POST':
@@ -21,14 +21,23 @@ def add_to_cart(request,product_id):
             key_value=request.POST[key].strip()
             if 'csrf' in key:
                 continue
+
+            # collect the variations from Varition Model
             variation=Variation.objects.get(product=product,variation_category__iexact=key,variation_value__iexact=key_value,is_active=True)
-            product_variation.append(variation)
+            product_variation.append(variation) #append all varition to use
         
         
 
     
     cart,created=Cart.objects.get_or_create(cart_id=_cart_id(request=request)) #either get the cart with cart_id (i.e session key) or create with it.
-    cart_item=CartItem.objects.filter(product=product,cart=cart)
+    cart_item=CartItem.objects.filter(product=product,cart=cart) #check available product with refer to cart
+    
+    '''
+    If product in cart _items exist then loop all cart_items to check same variations available or not? If yes then increase the quantity of product and redirect  to cart page.
+    If product is not available withing cart_items then create new one and with added variations
+
+    '''
+
     if cart_item.exists():
         
         for item in cart_item:
@@ -49,10 +58,16 @@ def add_to_cart(request,product_id):
      
 
 def remove_cart(request,product_id,cartItem_id):
+
+    # collect cart from session id..
+    # collect product from product which is from param 'product_id'
+    # collect cart_item from cart_item_id from param 'cartItem_id'
+  
     cart=Cart.objects.get(cart_id=_cart_id(request=request))
     product=get_object_or_404(Product,id=product_id)
     cart_item=CartItem.objects.get(id=cartItem_id,cart=cart,product=product)
 
+    # if quantity is more than 1 then reduce the quantity else delete it
     if cart_item.quantity>1:
         cart_item.quantity-=1
         cart_item.save()
@@ -61,24 +76,37 @@ def remove_cart(request,product_id,cartItem_id):
     return redirect('cart')
 
 def remove_cart_item(request,product_id,cartItem_id):
+
+    # collect cart from session id..
+    # collect product from product which is from param 'product_id'
+    # collect cart_item from cart_item_id from param 'cartItem_id'
+
     cart=Cart.objects.get(cart_id=_cart_id(request=request))
     product=get_object_or_404(Product,id=product_id)
     cart_item=CartItem.objects.get(id=cartItem_id,cart=cart,product=product)
+
+    # delete product from cart_item
     cart_item.delete()
     return redirect('cart')
 
 
 def load_cart(request,total=0,quantity=0,cart_items=None,grand_total=0,tax=0):
     try:
-        cart=Cart.objects.get(cart_id=_cart_id(request=request))
-        cart_items=CartItem.objects.filter(cart=cart,is_active=True)
+        
+        cart=Cart.objects.get(cart_id=_cart_id(request=request)) # collect cart from using session
+        cart_items=CartItem.objects.filter(cart=cart,is_active=True) # collect cart_items from using cart
+        
+        # calculate the total, tax and grand_total
         for cart_item in cart_items:
             total+=cart_item.product.price*cart_item.quantity
             quantity+=cart_item.quantity
+        
         tax=(2*total)/100
         grand_total=total+tax
     except:
         pass
+
+    # store require key and value with context to use in template
     context={
         'cart_items':cart_items,
         'total':total,

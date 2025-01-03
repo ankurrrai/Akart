@@ -46,7 +46,7 @@ def store(request,category_slug=None):
 # rebder the product details html file wrt category and product slug in param
 def product_details(request,category_slug,product_slug):
     try:
-        single_product=Product.objects.get(category__slug=category_slug,slug=product_slug)
+        single_product=Product.objects.get(category__slug=category_slug,slug=product_slug) #collect product details by using param such that 'category_slug' and 'product_slug'.
         cart_exits=CartItem.objects.filter(cart__cart_id=_cart_id(request=request),product=single_product).exists() #check this product is available to cart or not
     except Exception as e:
         raise e
@@ -60,9 +60,13 @@ def serach_product(request):
     products=None
     product_count=0
     if 'keyword' in request.GET:
-        keyword=request.GET['keyword']
-        keyword=keyword.strip()
-        products=Product.objects.order_by('modified_date').filter(Q(category__slug__icontains=keyword) | Q(slug__icontains=keyword) | Q(description__icontains=keyword) | Q(product_name__icontains=keyword) )
+        #collect the keyword and  remove the white spaces
+        keyword=request.GET['keyword'] 
+        keyword=keyword.strip() 
+
+        # collect all products form Query
+        products=Product.objects.order_by('modified_date').filter(Q(category__category_name__icontains=keyword) | Q(category__slug__icontains=keyword) |
+         Q(slug__icontains=keyword) | Q(description__icontains=keyword) | Q(product_name__icontains=keyword) )
         product_count=products.count()
     
     context={

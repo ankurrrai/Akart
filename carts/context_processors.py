@@ -1,6 +1,7 @@
 from .models import *
 from .views import _cart_id
 
+# this is context_processor for cart count
 def get_cart_count(request):
     cart_count=0
     if 'admin' in request.path:
