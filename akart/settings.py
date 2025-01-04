@@ -11,30 +11,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config as env
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6f^w*4)1y##d_m4ah8=euce1!v77g8f*9-s9et$@q417_z9h_^'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
-# read env file
-import environ
-env = environ.Env()
-environ.Env.read_env()
-
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -153,9 +137,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # Gmail credentials
-# EMAIL_HOST_USER = env("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
-EMAIL_HOST_USER="akart.alerts@gmail.com"
-EMAIL_HOST_PASSWORD="mixtxygzdlnuafis"
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
+# expiry
 PASSWORD_RESET_TIMEOUT=86400 #1day

@@ -44,8 +44,8 @@ def register(request):
                 send_email=EmailMessage(subject=subject_name,body=message,to=[email])
                 send_email.send()
                 
-                messages.success(request=request,message='Email Sent')
-                return redirect('login')
+                # messages.success(request=request,message='Email Sent')
+                return redirect('../login/?validation=True&email='+str(email.strip()))
             except Exception as e:
                 messages.error(request=request,message=e)
                 return  redirect('register')
@@ -105,8 +105,6 @@ def activate(request,uidb64,token):
         return redirect('login')
     
     # if not then pass a error meassge to register page
-    if user is not None:
-        user.delete()
     messages.error(request=request,message='Invalid activation link')
     return redirect('register')
     
