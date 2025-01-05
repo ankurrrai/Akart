@@ -51,9 +51,16 @@ $(document).ready(function() {
 		$('[data-toggle="tooltip"]').tooltip()
 	} // end if
 
+    // Auto-dismiss alerts after a timeout
+    setTimeout(function(){
+        $('#message').fadeOut('slow')
+    },5000)
+    
 
-
-
+    $(document).ready(function () {
+        // Initialize the modal and show it when the document is ready
+        $('#disclaimerModal').modal('show');
+      });
     
 }); 
 // jquery end

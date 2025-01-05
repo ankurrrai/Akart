@@ -40,7 +40,7 @@
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="{% url 'store' %}">All</a>
                     {% for category in categories %}
-                    <a class="dropdown-item" href="{{ category.get_url }}">{{category.category_name}}</a>
+                    <a class="dropdown-item" href="{{ category.get_url }}">{{category.category_name | capfirst}}</a>
                     {% endfor %}
                 </div>
             </div>  <!-- category-wrap.// -->
@@ -73,7 +73,7 @@
                         <div class="widget-header">
                             <small class="title text-muted">Welcome {{user.first_name}}!</small>
                             <div> 
-                                <a href="#">Dashboard</a> <span class="dark-transp"> | </span>
+                                <a href="{% url 'dashboard' userid=user.id%}">Dashboard</a> <span class="dark-transp"> | </span>
                                 <a href="{% url 'destroy_session' %}">Logout</a>
                             </div>
                         </div>

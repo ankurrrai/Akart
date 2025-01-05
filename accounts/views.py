@@ -74,7 +74,7 @@ def login(request):
         # if user has provide valid details login to the portal else throw an error message
         if not (user is None):
             auth.login(request=request,user=user)
-            return redirect('home')
+            return redirect(request.GET.get('next','home'))
         else:
             messages.error(request=request,message='Email or password is incorrect!')
             return redirect('login')
@@ -107,4 +107,14 @@ def activate(request,uidb64,token):
     # if not then pass a error meassge to register page
     messages.error(request=request,message='Invalid activation link')
     return redirect('register')
-    
+
+@login_required(login_url='login')
+def dashboard(request,userid):
+    if request.user.id==userid:
+        user_details=Account.objects.get(pk=userid)
+        context={
+            'user_details':user_details
+        }
+        return render(request=request,template_name='accounts/dashboard.html',context=context)
+    else:
+        raise ValueError('Path is not valid')

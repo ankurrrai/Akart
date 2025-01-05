@@ -1,0 +1,114 @@
+
+  <style>
+    /* Modal overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    /* Modal container */
+    .modal-container {
+      background: #fff;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Modal header */
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .modal-header h5 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .modal-header .close-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Modal body */
+    .modal-body {
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    /* Modal footer */
+    .modal-footer {
+      text-align: right;
+    }
+
+    .modal-footer button {
+      padding: 8px 16px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    .modal-footer button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h5>Important Notice</h5>
+        <button class="close-button" id="closeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          All images displayed on this site are the property of their respective companies and owners. These images are used solely for learning purposes and are not intended for market use.
+        </p>
+        <p>
+          If you would like any image to be removed, please contact us at:
+          <strong><a href="mailto:ankurrrai@gmail.com">ankurrrai@gmail.com</a></strong>.
+        </p>
+        <p class="mb-0">Thank you for understanding :)</p>
+      </div>
+      <div class="modal-footer">
+        <button id="closeButton">Okay, Got It!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Select modal and buttons
+    const modalOverlay = document.getElementById('modalOverlay');
+    const closeModal = document.getElementById('closeModal');
+    const closeButton = document.getElementById('closeButton');
+
+    // Show modal on page load
+    window.onload = function () {
+      modalOverlay.style.display = 'flex';
+    };
+
+    // Close modal on button click
+    closeModal.onclick = closeButton.onclick = function () {
+      modalOverlay.style.display = 'none';
+    };
+  </script>
+

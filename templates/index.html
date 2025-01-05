@@ -5,13 +5,51 @@
 {% load static %}
 {% block content %}
 
+<!-- include the modal -->
+{% include 'includes/popup.html' %}
+
 <!-- ========================= SECTION MAIN ========================= -->
 <section class="section-intro padding-y-sm">
 <div class="container">
 
-<div class="intro-banner-wrap">
-	<img src="{% static 'images/banners/cover.jpg' %}" class="img-fluid rounded">
+
+<!-- banner start -->
+<!-- Banner Carousel -->
+<div id="bannerCarousel" class="carousel slide intro-banner-wrap" data-ride="carousel">
+  <!-- Indicators (Optional) -->
+  <ol class="carousel-indicators">
+      <li data-target="#bannerCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#bannerCarousel" data-slide-to="1"></li>
+      <li data-target="#bannerCarousel" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Carousel Inner -->
+  <div class="carousel-inner ">
+      <!-- First Banner -->
+      <div class="carousel-item active">
+          <a href="{% url 'store' %}"><img src="{% static 'images/banners/canva2.png' %}" class="d-block w-100" alt="Banner 1"></a>
+      </div>
+      <!-- Second Banner -->
+      <div class="carousel-item">
+          <a href="{% url 'store' %}"><img src="{% static 'images/banners/canva3.png' %}" class="d-block w-100" alt="Banner 2"></a> 
+      </div>
+      <!-- Third Banner -->
+      <div class="carousel-item">
+          <a href="{% url 'store' %}"><img src="{% static 'images/banners/canva1.png' %}" class="d-block w-100" alt="Banner 3"></a> 
+      </div>
+  </div>
+
+  <!-- Carousel Controls -->
+  <a class="carousel-control-prev" href="#bannerCarousel" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#bannerCarousel" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+  </a>
 </div>
+<!-- banner end -->
 
 </div> <!-- container //  -->
 </section>
