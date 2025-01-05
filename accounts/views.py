@@ -108,13 +108,114 @@ def activate(request,uidb64,token):
     messages.error(request=request,message='Invalid activation link')
     return redirect('register')
 
+
+# load dashboard
 @login_required(login_url='login')
-def dashboard(request,userid):
-    if request.user.id==userid:
-        user_details=Account.objects.get(pk=userid)
+def dashboard(request):
+    return render(request=request,template_name='accounts/dashboard.html')
+
+
+def forgotpassword(request):
+    # to prevent for open url when client is logged in.
+    if request.user.is_authenticated:
+        return redirect('home')
+    
+    # when user sumbit form request...
+    if request.method =='POST':
+        
+        # filter user with provided email
+        user=Account.objects.filter(email__iexact=request.POST['email'])
+        
+        if user.exists():
+
+            # if user exists then send an reset_email by using with tokens and primary key
+            user=Account.objects.get(email__iexact=request.POST['email'])
+            message=render_to_string(template_name='accounts/reset_password.html',context={
+                'domain':get_current_site(request=request),
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':default_token_generator.make_token(user),
+                'user':user
+            })
+            subject_name='Reset your password'
+            email=EmailMessage(subject=subject_name,body=message,to=[user.email])
+            email.send()
+            messages.success(request=request,message="Reset link sent to your register email!")
+            return redirect('login')
+        else:
+            # error messages
+            messages.error(request=request,message="Account doesn't exist!")
+            return redirect('forgotpassword')
+    # render forgotpassword page
+    return render(request=request,template_name='accounts/forgotpassword.html')
+
+
+
+def reset_password(request,uidb64,token):
+    
+    # to prevent for open url when client is logged in.
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    # collect user informations from tokens and primary key i.e pk
+    try:
+        uid=urlsafe_base64_decode(uidb64).decode()
+        user=Account.objects.get(pk=uid)
+    except (TypeError,ValueError,OverflowError,Account.DoesNotExist):
+        user=None
+    
+    #if user has details are matched with tokens then update a given password
+    if user is not None and default_token_generator.check_token(user,token):
         context={
-            'user_details':user_details
-        }
-        return render(request=request,template_name='accounts/dashboard.html',context=context)
+                'domain':get_current_site(request=request),
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':default_token_generator.make_token(user),
+                'user':user
+            }
+        # collect query value to display messages alerts
+        if request.GET.get('has_error')!='Yes':
+            messages.success(request=request,message='Link Verified! Update your password')
+        return render(request=request,template_name='accounts/add_new_password.html',context=context)
+    
+    # return with error messages
+    messages.error(request=request,message='Reset link is not valid!')
+    return redirect('forgotpassword')
+    
+
+
+def add_new_password(request,uidb64,token):
+
+    # to prevent for open url when client is logged in.
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    # check the form method
+    if request.method=='POST':
+
+        # if user has not provide password and confirm password then return to previous i.e same form..
+        password=request.POST['password']
+        confirm_password=request.POST['confirm_password']
+
+        if password != confirm_password:
+            messages.error(request=request,message='Password does not match!')
+            return redirect(request.POST['previous']+'?has_error=Yes')
+
+        # collect user informations from tokens and primary key i.e pk
+        try:
+            uid=urlsafe_base64_decode(uidb64).decode()
+            user=Account.objects.get(pk=uid)
+        except (TypeError,ValueError,OverflowError,Account.DoesNotExist):
+            user=None
+        
+        #if user has details are matched with tokens then update a given password
+        if user is not None and default_token_generator.check_token(user,token):
+            user.set_password(password)
+            user.save()
+            messages.success(request=request,message='Password updated successfully!')
+            return redirect('login')
+        
+        # return error messages
+        messages.error(request=request,message='Something went wrong!')
+        return redirect('forgotpassword')
     else:
-        raise ValueError('Path is not valid')
+        messages.error(request=request,message='Something went wrong!')
+        return redirect('login')
