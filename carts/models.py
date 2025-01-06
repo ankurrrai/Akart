@@ -2,6 +2,8 @@ from django.db import models
 from store.models import Product,Variation
 from django.urls import reverse
 
+from accounts.models import Account
+
 #  Cart is baiscally used to store the session_key
 class Cart(models.Model):
     cart_id=models.CharField(max_length=250,blank=True)
@@ -13,6 +15,7 @@ class Cart(models.Model):
 class CartItem(models.Model):
 
     # add require fields 
+    user=models.ForeignKey(Account,on_delete=models.CASCADE,null=True)
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
     cart=models.ForeignKey(Cart,on_delete=models.CASCADE,null=True)
     variations=models.ManyToManyField(Variation,blank=True,null=True)

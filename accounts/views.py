@@ -6,6 +6,11 @@ from django.contrib.auth.decorators import login_required
 
 from django.http import HttpResponse
 
+
+# load cartview and cart models
+from carts.views import _cart_id
+from carts.models import Cart,CartItem
+
 # USER ACTIVATION
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -13,6 +18,27 @@ from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
+
+# check password strength
+import re,requests
+def custom_password_validator(password):
+    errors = []
+    if len(password) < 8:
+        errors.append("Password must be at least 8 characters long.")
+    if not re.search(r"[A-Z]", password):
+        errors.append("Password must contain at least one uppercase letter.")
+    if not re.search(r"[a-z]", password):
+        errors.append("Password must contain at least one lowercase letter.")
+    if not re.search(r"\d", password):
+        errors.append("Password must contain at least one digit.")
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        errors.append("Password must contain at least one special character.")
+    
+    if errors:
+        return {'status': 'weak', 'errors': errors}
+    return {'status': 'strong', 'errors': []}
+
+
 
 
 def register(request):
@@ -29,11 +55,18 @@ def register(request):
                 email=form.cleaned_data['email']
                 password=form.cleaned_data['password']
                 username=email.split('@')[0]+'1'
+                
+                # check password strength
+                result=custom_password_validator(password=password)
+                if result['status']=='weak':
+                    messages.error(request=request,message=result['errors'][0])
+                    return  redirect('register')
+
                 user=Account.objects.create_user(email=email,first_name=first_name,last_name=last_name,username=username,password=password)
                 user.phone_number=phone_number
                 user.save()
-                # ACTIVATION email
                 
+                # ACTIVATION email
                 subject_name='AKART | Verification email!!'
                 message=render_to_string(template_name='accounts/email_activation.html',context={
                     'domain':get_current_site(request=request),
@@ -73,8 +106,55 @@ def login(request):
         
         # if user has provide valid details login to the portal else throw an error message
         if not (user is None):
+            try:
+                # load cart if anything added before login
+                cart=Cart.objects.get(cart_id=_cart_id(request=request))
+                cart_items=CartItem.objects.filter(cart=cart)
+                items=CartItem.objects.filter(user=user)
+                
+                
+                cart_variations=[]
+                cart_item_id=[]
+                for cart_item in cart_items:
+                    variation=cart_item.variations.all()
+                    cart_variations.append(list(variation))
+                    cart_item_id.append(cart_item.id)
+                    
+                    
+                id=[]
+                user_variations=[]
+                for item in items:
+                    variation=item.variations.all()
+                    user_variations.append(list(variation))
+                    id.append(item.id)
+                
+                for i,variation in enumerate(cart_variations):
+                    if variation in user_variations:
+                        index=user_variations.index(variation)
+                        item_id=id[index]
+                        item=CartItem.objects.get(id=item_id)
+                        item.quantity+=1
+                        item.user=user
+                        item.save()
+                    else:
+                        cart_item=CartItem.objects.get(id=cart_item_id[i])
+                        cart_item.user=user
+                        cart_item.save()
+                    
+
+            except:
+                pass
             auth.login(request=request,user=user)
-            return redirect(request.GET.get('next','home'))
+            url=request.META.get('HTTP_REFERER')
+            try:
+                query=requests.utils.urlparse(url).query
+                params=dict(x.split('=') for x in query.split("&"))
+                if 'next' in params:
+                    next_page=params['next']
+                    return redirect(next_page)
+            except:
+                pass
+            return redirect('home')
         else:
             messages.error(request=request,message='Email or password is incorrect!')
             return redirect('login')
@@ -197,6 +277,12 @@ def add_new_password(request,uidb64,token):
 
         if password != confirm_password:
             messages.error(request=request,message='Password does not match!')
+            return redirect(request.POST['previous']+'?has_error=Yes')
+
+        # check password strength
+        result=custom_password_validator(password=password)
+        if result['status']=='weak':
+            messages.error(request=request,message=result['errors'][0])
             return redirect(request.POST['previous']+'?has_error=Yes')
 
         # collect user informations from tokens and primary key i.e pk
