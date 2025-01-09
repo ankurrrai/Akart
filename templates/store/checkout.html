@@ -8,9 +8,7 @@
     
     <!-- ============================ COMPONENT 1 ================================= -->
     <div class="row">
-        <div class="col">
-            <header class="mb-4"><h4 class="card-title text-center">Order Review</h4></header>
-        </div>
+        
     </div>
     <div class="row">
         
@@ -18,7 +16,8 @@
 
         <div class="card">
             <article class="card-body">
-                <form action="{% url 'checkout' %}">
+                <form action="{% url 'place-order' %}" method="POST">
+                    {% csrf_token %}
                 <header class="mb-4"><h4 class="card-title text-center">Billing Address</h4></header>
                 
                 
@@ -46,12 +45,12 @@
 
                         <div class="form-row">
                             <div class="col form-group">
-                                <label>Address Lane 1</label>
-                                  <input type="text" name="address_lane_1" class="form-control" placeholder="Address Lane 1" required>
+                                <label>Address Line 1</label>
+                                  <input type="text" name="address_line_1" class="form-control" placeholder="Address Line 1" required>
                             </div> 
                             <div class="col form-group">
-                                <label>Address Lane 2</label>
-                                <input type="text" name="address_lane_2" class="form-control" placeholder="Address Lane 2">
+                                <label>Address Line 2</label>
+                                <input type="text" name="address_line_2" class="form-control" placeholder="Address Line 2">
                             </div> 
                         </div> 
                         
@@ -73,7 +72,7 @@
                         <div class="form-row">
                             <div class="col form-group">
                                 <label>Landmark</label>
-                                <input class="form-control" type="text" name="landmark" placeholder="Near to hospital" required>
+                                <input class="form-control" type="text" name="order_note" placeholder="Near to hospital" required>
                             </div>
                         </div>
                   
