@@ -154,7 +154,8 @@ def login(request):
                     return redirect(next_page)
             except:
                 pass
-            return redirect('home')
+            messages.success(request=request,message='Login Successfully!')
+            return redirect('dashboard')
         else:
             messages.error(request=request,message='Email or password is incorrect!')
             return redirect('login')
