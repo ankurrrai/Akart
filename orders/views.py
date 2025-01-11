@@ -1,12 +1,16 @@
 from django.shortcuts import render,redirect
 from carts.models import CartItem
-from .models import Order,Payment
+from store.models import Product
+from .models import Order,Payment,OrderProduct
 from .forms import OrderForm
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
-import time,string,random
+from django.http import HttpResponse,JsonResponse
 
-from django.http import HttpResponse
-import json
+
+import json,time,string,random
+
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -19,12 +23,13 @@ def get_client_ip(request):
 def generate_order_number():
     timestamp = int(time.time())  # Current timestamp
     random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-    return f"{timestamp}_{random_str}_"
+    return f"{timestamp}{random_str}"
 
 
 @login_required(login_url='login')
 def payments(request):
 
+    # collect body from client side i.e via fetch
     body=request.body
     details=json.loads(body)
 
@@ -42,8 +47,52 @@ def payments(request):
     order.is_ordered=True
     order.save()
 
+    # move the carts item to Order product table
+    cart_items=CartItem.objects.filter(user=request.user)
+    for item in cart_items:
+        orderProduct=OrderProduct()
+        orderProduct.order=order
+        orderProduct.payment=payment
+        orderProduct.user=request.user
+        orderProduct.product=item.product
+        orderProduct.quantity=item.quantity
+        orderProduct.product_price=item.product.price
+        orderProduct.is_ordered=True
+        orderProduct.save()
 
-    return redirect('dashboard')
+        cart_item=CartItem.objects.get(id=item.id)
+        orderProduct=OrderProduct.objects.get(id=orderProduct.id)
+        orderProduct.variation.set(cart_item.variations.all())
+        orderProduct.save()
+        
+        #reduce the qunatity if the sold product    
+        product=Product.objects.get(id=item.product.id)
+        product.stock-=item.quantity
+        product.save()
+
+    #clear the cart
+    CartItem.objects.filter(user=request.user).delete()
+    
+    #send confirmation email to customer
+    subject_name='AKART | Order Confirmation!'
+    message=render_to_string(template_name='orders/order_confirmation.html',context={
+        'order':order,
+        'user':request.user,
+        
+    })
+    send_email=EmailMessage(subject=subject_name,body=message,to=[order.email,order.user.email])
+    send_email.send()
+
+    #send response to client
+    data={
+
+        'orderId':order.order_number,
+        'paymentId':payment.payment_id,
+    }
+
+    return JsonResponse(data=data)
+
+    
 
 
 @login_required(login_url='login')
@@ -104,5 +153,30 @@ def place_order(request,total=0,quantity=0,cart_items=None,grand_total=0,tax=0):
             return redirect('cart')
     else:
         return redirect('checkout')
+    
+@login_required(login_url='login')
+def order_complete(request):
+    try:
+        orderId=request.GET.get('orderId')
+        paymentId=request.GET.get('paymentId')
 
+        order=Order.objects.get(order_number=orderId,user=request.user)
+        payment=Payment.objects.get(payment_id=paymentId,user=request.user)
+        order_products=OrderProduct.objects.filter(order=order,payment=payment,user=request.user)
+        
+        sub_total=0
+        for item in order_products:
+            sub_total+=item.product_price*item.quantity
 
+        context={
+            'order_products':order_products,
+            'order':order,
+            'payment':payment,
+            'sub_total':sub_total
+        }
+        return render(request=request,template_name='orders/order_complete.html',context=context)
+    except (Payment.DoesNotExist,Order.DoesNotExist):
+        return redirect('home')
+    
+
+ 
