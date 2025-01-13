@@ -13,6 +13,9 @@ urlpatterns=[
 
     # dashboard
     path(route='dashboard/',view=dashboard,name='dashboard'),
+    path(route='edit_profile/',view=edit_profile,name='edit_profile'),
+    path(route='orders/',view=orders,name='orders'),
+    path(route='change_password/',view=change_password,name='change_password'),
     
     # forgotpassword
     path(route='forgotpassword/',view=forgotpassword,name='forgotpassword'),

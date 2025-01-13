@@ -2,3 +2,6 @@ django==3.1
 Pillow
 django-environ
 requests
+django-admin-thumbnails
+django-admin-honeypot
+django-session-timeout

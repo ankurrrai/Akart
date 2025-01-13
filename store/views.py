@@ -3,7 +3,7 @@
 from django.shortcuts import render,get_object_or_404,redirect
 
 # models import from different app based on use
-from .models import Product,RatingReview
+from .models import Product,RatingReview,ProductGallery
 from category.models import Category
 from carts.models import * 
 from carts.views import _cart_id 
@@ -51,14 +51,19 @@ def store(request,category_slug=None):
 def product_details(request,category_slug,product_slug):
     try:
         single_product=Product.objects.get(category__slug=category_slug,slug=product_slug) #collect product details by using param such that 'category_slug' and 'product_slug'.
-        cart_exits=CartItem.objects.filter(cart__cart_id=_cart_id(request=request),product=single_product).exists() #check this product is available to cart or not
+        if request.user.is_authenticated:
+            cart_exits=CartItem.objects.filter(user=request.user,product=single_product).exists() #check this product is available to cart or not
+        else:
+            cart_exits=CartItem.objects.filter(cart__cart_id=_cart_id(request=request),product=single_product).exists() #check this product is available to cart or not
         reviews=RatingReview.objects.filter(product=single_product)
+        product_gelleries=ProductGallery.objects.filter(product=single_product)
     except Exception as e:
         raise e
     context={
         'single_product':single_product,
         'cart_exits':cart_exits,
         'reviews':reviews,
+        'product_gelleries':product_gelleries
     }
     return render(request=request,template_name='store/product_details.html',context=context)
 

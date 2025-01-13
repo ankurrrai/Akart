@@ -16,8 +16,12 @@
             </li>
         </ul>
         <ul class="navbar-nav">
-            <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> Email </a></li>
-            <li><a href="#" class="nav-link"> <i class="fa fa-phone"></i> Call us </a></li>
+            
+            <li><a href="mailto:akart.alerts@gmail.com" class="nav-link"> <i class="fa fa-envelope"></i> Email </a></li>
+            <li><a href="tel:+91 9169684884" class="nav-link"> <i class="fa fa-phone"></i> Call us </a></li>
+            {% if not user.is_authenticated %}
+            <li><a href="{% url 'developer' %}" class="nav-link"> <i class="fa-regular fa-user"></i> Developer Profile </a></li>
+            {% endif %}
         </ul> <!-- list-inline //  -->
       </div> <!-- navbar-collapse .// -->
     </div> <!-- container //  -->

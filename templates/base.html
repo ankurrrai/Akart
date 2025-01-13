@@ -30,7 +30,8 @@
 <!-- paypal button -->
 <script src="https://www.paypal.com/sdk/js?client-id=AcPhI8DxOoAD9JUhi9YXlyVIVOHoCCXRHn2zmq19l3hbRi0YcTOD7sqVnmqBeMAWzibYbVnSdMBNlQTP&currency=USD"></script>
 
-
+<!-- LinkedIn -->
+<script src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
 
 <!-- fonawesome -->
 <script src="https://kit.fontawesome.com/0498cfb1c8.js" crossorigin="anonymous"></script>
@@ -69,6 +70,25 @@ $(document).ready(function() {
 <!-- Load footer -->
 {% include 'includes/footer.html' %}
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+	$(document).ready(function(){
+		$('.thumb a').click(function(e){
+			e.preventDefault();
+			$('#mainImage img').attr('src',$(this).attr("href"));
+		})
+	})
+	const container = document.querySelector('.product-image-container');
+    const image = container.querySelector('.product-image');
+    
+	container.addEventListener('mousemove', (e) => {
+	const rect = container.getBoundingClientRect();
+	const x = ((e.clientX - rect.left) / rect.width) * 100;
+	const y = ((e.clientY - rect.top) / rect.height) * 100;
 
+	image.style.setProperty('--mouse-x', `${x}%`);
+	image.style.setProperty('--mouse-y', `${y}%`);
+	});
+</script>
 </body>
 </html>

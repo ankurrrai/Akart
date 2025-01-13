@@ -44,6 +44,10 @@ class Account(AbstractBaseUser):
 
     objects=MyAccountManager()
 
+    def profile_picture_url(self):
+        user_details=UserDetails.objects.get(user=self)
+        return user_details.profile_picture.url
+
     def __str__(self):
         return self.email
     
@@ -52,3 +56,27 @@ class Account(AbstractBaseUser):
     
     def has_module_perms(self,add_label):
         return True
+
+class UserDetails(models.Model):
+    user=models.OneToOneField(Account,on_delete=models.CASCADE)
+    profile_picture=models.ImageField(upload_to='user/profile_picture')
+    address_line_1=models.CharField(max_length=150,blank=True)
+    address_line_2=models.CharField(max_length=150,blank=True)
+    country=models.CharField(max_length=50)
+    state=models.CharField(max_length=50)
+    pin_code=models.CharField(max_length=50)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
+
+    
+    def address(self):
+        return f"{self.address_line_1}, {self.address_line_2}"
+    
+    def zipCode(self):
+        return f"{self.state}, {self.country}-{self.pin_code}"
+    
+    def contactDetails(self):
+        return f"Email: {self.email}, Phone Number: {self.phone_number}"
+    
+    def __str__(self):
+        return self.user.email

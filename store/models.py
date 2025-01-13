@@ -14,7 +14,7 @@ class Product(models.Model):
     stock=models.IntegerField()
     is_available=models.BooleanField(default=True)
     category=models.ForeignKey(Category,on_delete=models.CASCADE)
-    created_date=models.DateTimeField(auto_now=True)
+    created_date=models.DateTimeField(auto_now_add=True)
     modified_date=models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -73,3 +73,15 @@ class RatingReview(models.Model):
 
     def __str__(self):
         return self.subject
+    
+
+class ProductGallery(models.Model):
+    product=models.ForeignKey(Product,default=None,on_delete=models.CASCADE)
+    image=models.ImageField(max_length=255,upload_to='store/products')
+
+    class Meta:
+        verbose_name='Product Gallery'
+        verbose_name_plural='Product Galleries'
+
+    def __str__(self):
+        return self.product.product_name

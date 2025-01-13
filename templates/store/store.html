@@ -41,79 +41,7 @@
                 </div> <!-- card-body.// -->
             </div>
         </article> <!-- filter-group  .// -->
-        <article class="filter-group">
-            <header class="card-header">
-                <a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="false" class="">
-                    <i class="icon-control fa fa-chevron-down"></i>
-                    <h6 class="title">Sizes </h6>
-                </a>
-            </header>
-            <div class="filter-content collapse" id="collapse_4" >
-                <div class="card-body">
-                  <label class="checkbox-btn">
-                    <input type="checkbox">
-                    <span class="btn btn-light"> XS </span>
-                  </label>
-    
-                  <label class="checkbox-btn">
-                    <input type="checkbox">
-                    <span class="btn btn-light"> SM </span>
-                  </label>
-    
-                  <label class="checkbox-btn">
-                    <input type="checkbox">
-                    <span class="btn btn-light"> LG </span>
-                  </label>
-    
-                  <label class="checkbox-btn">
-                    <input type="checkbox">
-                    <span class="btn btn-light"> XXL </span>
-                  </label>
-            </div><!-- card-body.// -->
-            </div>
-        </article> <!-- filter-group .// -->
         
-        <article class="filter-group">
-            <header class="card-header">
-                <a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="flase" class="">
-                    <i class="icon-control fa fa-chevron-down"></i>
-                    <h6 class="title">Price range </h6>
-                </a>
-            </header>
-            <div class="filter-content collapse" id="collapse_3">
-                <div class="card-body">
-                    
-                    <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <label>Min</label>
-                      <!-- <input class="form-control" placeholder="$0" type="number"> -->
-                          <select class="mr-2 form-control">
-                            <option value="0">$0</option>
-                            <option value="50">$50</option>
-                            <option value="100">$100</option>
-                            <option value="150">$150</option>
-                            <option value="200">$200</option>
-                            <option value="500">$500</option>
-                            <option value="1000">$1000</option>
-                        </select>
-                    </div>
-                    <div class="form-group text-right col-md-6">
-                      <label>Max</label>
-                          <select class="mr-2 form-control">
-                            <option value="50">$50</option>
-                            <option value="100">$100</option>
-                            <option value="150">$150</option>
-                            <option value="200">$200</option>
-                            <option value="500">$500</option>
-                            <option value="1000">$1000</option>
-                            <option value="2000">$2000+</option>
-                        </select>
-                    </div>
-                    </div> <!-- form-row.// -->
-                    <button class="btn btn-block btn-primary">Apply</button>
-                </div><!-- card-body.// -->
-            </div>
-        </article> <!-- filter-group .// -->
         
     </div> <!-- card.// -->
     
@@ -140,17 +68,29 @@
                 <figcaption class="info-wrap">
                     <div class="fix-height">
                         <a href="{{product.get_url}}" class="title">{{product.product_name}}</a>
-                        <div class="price-wrap mt-2">
-                            <span class="price">₹ {{product.price}}</span>
-                            <del class="price-old">₹ {{product.price}}</del>
-                        </div> <!-- price-wrap.// -->
+                        <p class="mb-2">
+                            <span class="user-rating">
+                                    
+                            <i class="fa fa-star{% if product.average_rating < 0.5 %}-o{% elif  product.average_rating >= 0.5 and  product.average_rating < 1 %}-half-o{% endif %}"></i>
+                            <i class="fa fa-star{% if product.average_rating < 1.5 %}-o{% elif  product.average_rating >= 1.5 and  product.average_rating < 2 %}-half-o{% endif %}"></i>
+                            <i class="fa fa-star{% if product.average_rating < 2.5 %}-o{% elif  product.average_rating >= 2.5 and  product.average_rating < 3 %}-half-o{% endif %}"></i>
+                            <i class="fa fa-star{% if product.average_rating < 3.5 %}-o{% elif  product.average_rating >= 3.5 and  product.average_rating < 4 %}-half-o{% endif %}"></i>
+                            <i class="fa fa-star{% if product.average_rating < 4.5 %}-o{% elif  product.average_rating >= 4.5 and  product.average_rating < 5 %}-half-o{% endif %}"></i>
+                            
+                            
+                            </span>
+                            <span>
+                                ({{product.count_of_ratings}} Ratings & Reviews)
+                            </span>
+                        </p>
+                        
                     </div>
-                    <a href="{{ product.get_url}}" class="btn btn-block btn-primary">View </a>
-                    <!-- {% if product.stock > 0 %}
-                        <a href="{% url 'add_cart' product.id %}" class="btn btn-block btn-primary">Add to cart </a>
-                    {% else %}
-                        <span class="btn btn-block btn-light disabled">Out of stock</span>
-                    {% endif %} -->
+                    <div class="price-wrap mt-2">
+                        <span class="price">${{product.price}}</span>
+                        <del class="price-old">${{product.price}}</del>
+                    </div> <!-- price-wrap.// -->
+                    <!-- <a href="{{ product.get_url}}" class="btn btn-block btn-primary">View </a> -->
+                    
                 </figcaption>
             </figure>
         </div> <!-- col.// -->

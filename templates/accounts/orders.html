@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<section class="section-conten padding-y bg">
+
+    <div class="container">
+        {% include 'includes/alerts.html' %}
+        <div class="row">
+            {% include 'includes/dashboard_sidebar.html' %}
+        <main class="col-md-9">
+            <article class="card">
+            
+                <div class="container mt-5">
+                    <div class="row mb-4">
+                        <div class="col text-center">
+                          <h1 class="text-primary">Your Orders</h1>
+                          
+                        </div>
+                      </div>
+            
+                    {% for order in orders %}
+            
+                    <!-- Order 2 -->
+                    
+                        <div class="card shadow-sm mb-4">
+                        <div class="card-body d-flex flex-row">
+                            <div class="me-3">
+                                <a href="{{order.product.get_url}}"><img src="{{order.product.product_image.url}}" alt="Product Image" class="img-fluid rounded" style="width: 100px ; height: 100px;"></a>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-1">{{order.product.product_name | capfirst}}</h5>
+                                <p class="mb-1">
+                                    {% for item in order.variation.all %}
+                                    <strong>{{item.variation_category | capfirst}}:</strong> {{item.variation_value | capfirst}}
+                                    
+                                    {% endfor %}
+                                    <strong>Quantity:</strong> {{order.quantity}}
+                                </p>
+                                <!-- <p class="text-info mb-1 small">
+                                    <strong>●OrederId:</strong> #{{order.order.order_number}}
+                                </p> -->
+                            </div>
+                            <div class="text-end">
+                                <p class="fw-bold mb-1">${{order.sub_total}}</p>
+                                {% if order.order.status == "Delivered" %}
+                                <p class="text-success mb-1 small">● {{order.order.status | capfirst}} on {{order.created_at}}</p>
+                                <a href="{{order.product.get_url}}" class="text-primary small">Rate & Review Product</a>
+                                
+                                {% elif order.order.status != "Cancelled" %}
+                                <p class="text-info mb-1 small">● {{order.order.status | capfirst}} on {{order.created_at}}</p>
+                                {% else %}
+                                <p class="text-danger mb-1 small">●  {{order.order.status | capfirst}} on {{order.created_at}}</p>
+                                {% endif %}
+                                <p>
+                                    <a href="{% url 'order_complete' %}?orderId={{order.order.order_number}}&paymentId={{order.payment.payment_id}}&displaySuccess=false" class="text-primary small">Order Details</a>
+                                </p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                
+                    {% endfor %}
+                   
+                </div>
+            
+            
+
+
+           </article> <!-- order-group.// --> 
+        </main>
+    </div> <!-- row.// -->
+    </div>
+    
+    
+</section>
+
+    
+{% endblock %}

@@ -21,8 +21,10 @@ from django.conf.urls.static import static #static imported for media files and 
 from django.conf import settings #import setting from main project which is akart here...
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
+    path('akart-akart-admin-akart/', admin.site.urls),
     path('',view=views.home,name='home'),
+    path('developer-profile/',view=views.developer,name='developer'),
     path('store/',include('store.urls')), #included store app urls
     path('cart/',include('carts.urls')), #include cart app urls
     path('user/',include('accounts.urls')),

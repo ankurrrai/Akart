@@ -73,9 +73,25 @@
 			<figcaption class="info-wrap">
 				<div class="fix-height">
 					<a href="{{product.get_url}}" class="title">{{ product.product_name }}</a>
-					<div class="price mt-1">₹ {{ product.price }}</div> <!-- price-wrap.// -->
+                    <p class="mb-2">
+                        <span class="user-rating">
+                                
+                        <i class="fa fa-star{% if product.average_rating < 0.5 %}-o{% elif  product.average_rating >= 0.5 and  product.average_rating < 1 %}-half-o{% endif %}"></i>
+                        <i class="fa fa-star{% if product.average_rating < 1.5 %}-o{% elif  product.average_rating >= 1.5 and  product.average_rating < 2 %}-half-o{% endif %}"></i>
+                        <i class="fa fa-star{% if product.average_rating < 2.5 %}-o{% elif  product.average_rating >= 2.5 and  product.average_rating < 3 %}-half-o{% endif %}"></i>
+                        <i class="fa fa-star{% if product.average_rating < 3.5 %}-o{% elif  product.average_rating >= 3.5 and  product.average_rating < 4 %}-half-o{% endif %}"></i>
+                        <i class="fa fa-star{% if product.average_rating < 4.5 %}-o{% elif  product.average_rating >= 4.5 and  product.average_rating < 5 %}-half-o{% endif %}"></i>
+                        
+                        
+                        </span>
+                        <span>
+                            ({{product.count_of_ratings}} Ratings & Reviews)
+                        </span>
+                    </p>
+					
 				</div>
-				<div><a href="{{ product.get_url}}" class="btn btn-block btn-primary">View </a></div>
+                <div class="price mt-1 mb-0">${{ product.price }}</div> <!-- price-wrap.// -->
+				<!-- <div><a href="{{ product.get_url}}" class="btn btn-block btn-primary">View </a></div> -->
 			</figcaption>
 		</div>
 	</div> <!-- col.// -->

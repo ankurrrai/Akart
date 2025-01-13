@@ -159,6 +159,12 @@ def order_complete(request):
     try:
         orderId=request.GET.get('orderId')
         paymentId=request.GET.get('paymentId')
+        displaySuccess=True
+        try:
+            if request.GET.get('displaySuccess')=='false':
+                displaySuccess=False
+        except:
+            pass
 
         order=Order.objects.get(order_number=orderId,user=request.user)
         payment=Payment.objects.get(payment_id=paymentId,user=request.user)
@@ -172,7 +178,8 @@ def order_complete(request):
             'order_products':order_products,
             'order':order,
             'payment':payment,
-            'sub_total':sub_total
+            'sub_total':sub_total,
+            'displaySuccess':displaySuccess
         }
         return render(request=request,template_name='orders/order_complete.html',context=context)
     except (Payment.DoesNotExist,Order.DoesNotExist):
