@@ -10,28 +10,195 @@
 
 
   #display-card{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      background-color: #f3f2ef;
+      padding: 20px;
+      flex-wrap: wrap;
     
   }
+ 
+      /* Common Card Styles */
+      .card {
+      width: 350px;
+      height: 380px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
+    /* LinkedIn Card */
+    .linkedin-card {
+      border: 1px solid #d1d1d1;
+    }
+
+    .linkedin-card .card-header {
+      background-color: #0077b5;
+      height: 50px;
+    }
+
+    .linkedin-card .card-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .linkedin-card .profile-image {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-top: -36px;
+      border: 3px solid #ffffff;
+    }
+
+    .linkedin-card .name {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 10px 0;
+      color: #333333;
+    }
+
+    .linkedin-card .role {
+      font-size: 14px;
+      color: #4a4a4a;
+      margin-bottom: 15px;
+    }
+
+    .linkedin-card .info {
+      font-size: 12px;
+      color: #6c757d;
+      line-height: 1.6;
+    }
+
+    .linkedin-card .button {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 8px 16px;
+      background-color: #0077b5;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .linkedin-card .button:hover {
+      background-color: #005580;
+    }
+
+    /* GitHub Card */
+    .github-card {
+      border: 1px solid #e1e4e8;
+    }
+
+    .github-card .card-header {
+      background-color: #24292e;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .github-card .card-header img {
+      height: 30px;
+    }
+
+    .github-card .card-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .github-card .profile-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-top: -40px;
+      border: 3px solid #ffffff;
+    }
+
+    .github-card .name {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 10px 0;
+      color: #24292e;
+    }
+
+    .github-card .role {
+      font-size: 14px;
+      color: #586069;
+      margin-bottom: 15px;
+    }
+
+    .github-card .info {
+      font-size: 12px;
+      color: #6a737d;
+      line-height: 1.6;
+    }
+
+    .github-card .button {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 8px 16px;
+      background-color: #2da44e;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .github-card .button:hover {
+      background-color: #22863a;
+    }
 
 </style>
 
 <br>
 <center>
   <!-- <h2>LinkedIn</h2> -->
-  <p>If you have any questions or would like to connect, feel free to reach out through Linked:</p>
+  <p>If you have any questions or would like to connect, feel free to reach out through LinkedIn:</p>
 </center>
 <br><br>
 
 <div id="display-card">
-  <div style="min-height: 400px!important;" class="badge-base LI-profile-badge" data-locale="en_US" data-size="large" data-theme="light" data-type="HORIZONTAL" data-vanity="ankurrrai" data-version="v1">
-    <!-- <a class="badge-base__link LI-simple-link" href="https://in.linkedin.com/in/ankur-rai-b49830158?trk=profile-badge">Ankur Rai</a> -->
-  </div>
+    <div class="card linkedin-card">
+      <div class="card-header button">LinkedIn</div>
+      <div class="card-body">
+
+        <img class="profile-image" 
+        src="https://media.licdn.com/dms/image/v2/D5603AQESSeiWw9hkZA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1722835015667?e=1742428800&v=beta&t=4oNLX28_PETGg_shk6T7nVgU99lernRQtewdW9Sskg8" 
+        alt="Profile Picture">
+
+        <div class="name">Ankur Rai</div>
+        <div class="role">Software Developer at Genpact India || Huawei</div>
+        <div class="info">
+          Genpact | GALGOTIA S COLLEGE OF ENGINEERING AND TECHNOLOGY, GREATER NOIDA
+        </div>
+        <a href="https://www.linkedin.com/in/ankurrrai/" class="button">View LinkedIn Profile</a>
+      </div>
+    </div>
   
+    <!-- GitHub Card -->
+    <div class="card github-card">
+      <div class="card-header">
+        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo">
+      </div>
+      <div class="card-body">
+        <img class="profile-image" src="https://avatars.githubusercontent.com/u/133564443?v=4" alt="Profile Picture">
+        <div class="name">Ankur Rai</div>
+        <div class="role">Software Developer at Genpact India</div>
+        <div class="info">
+          Passionate developer contributing to open-source projects.<br>
+          Genpact | GALGOTIA S COLLEGE OF ENGINEERING AND TECHNOLOGY, GREATER NOIDA
+        </div>
+        <a href="https://github.com/ankurrrai" class="button">View GitHub Profile</a>
+      </div>
+    </div>
 
 </div>
 

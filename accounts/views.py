@@ -315,9 +315,13 @@ def add_new_password(request,uidb64,token):
 # load dashboard
 @login_required(login_url='login')
 def dashboard(request):
+    #find user details for respective user
     user_detail=UserDetails.objects.get(user=request.user)
+
+    # display the count of total orders
     my_orders=OrderProduct.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
     order_counts=my_orders.count()
+
     context={
         'order_counts':order_counts,
         'user_detail':user_detail
@@ -326,10 +330,19 @@ def dashboard(request):
 
 @login_required(login_url='login')
 def edit_profile(request):
+
+    # find user details
     user_detail=get_object_or_404(UserDetails,user=request.user)
     if request.method=="POST":
+
+        # collect the both user and userProfile form from  post
+        # instance is used if any changes then collect that changes
+        # request.FILES is for collect the uploaded files if any specified file type then valid accordingly
+
         user_form=UserForm(request.POST,instance=request.user)
         profile_form=UserProfileForm(request.POST, request.FILES ,instance=user_detail)
+
+        # if valid the save and redirect edit_profile page
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -337,6 +350,7 @@ def edit_profile(request):
             messages.success(request=request,message='Your profile has been updated!')
             return redirect('edit_profile')
     
+    # if request method is GET then render with same form to display the data
     user_form=UserForm(instance=request.user)
     profile_form=UserProfileForm(instance=user_detail)
     context={
@@ -349,6 +363,7 @@ def edit_profile(request):
 @login_required(login_url='login')
 def orders(request):
 
+    # collect all orders for specific user and is_ordered field is True and render orders.html page
     my_orders=OrderProduct.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
     context={
         'orders':my_orders
@@ -357,7 +372,17 @@ def orders(request):
 
 @login_required(login_url='login')
 def change_password(request):
+
+    # logic
+    '''
+    Few checks such as:-
+        newPassword and confirm password should be same
+        newPassword should be follow minimum 8 digits with 1 uppercase, 1 lowercase, 1 special charter and 1 numeric value.
+        currentPassword should be correct to chnage the newPassword
+    '''
+
     if request.method=='POST':
+
         currentPassword=request.POST['currentPassword']
         newPassword=request.POST['newPassword']
         confirmPassword=request.POST['confirmPassword']

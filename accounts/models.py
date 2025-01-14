@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
 
 
 class MyAccountManager(BaseUserManager):
+    # this for adding user
     def create_user(self,first_name,last_name,username,email,password=None):
         user=self.model(
             email=self.normalize_email(email),
@@ -13,7 +14,7 @@ class MyAccountManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-
+    # call to add create superuser
     def create_superuser(self,first_name,last_name,username,email,password=None):
         user=self.create_user(first_name=first_name,last_name=last_name,email=email,password=password,username=username)
         user.is_admin=True
@@ -57,6 +58,7 @@ class Account(AbstractBaseUser):
     def has_module_perms(self,add_label):
         return True
 
+# User details for keep user profile picture and other personal details
 class UserDetails(models.Model):
     user=models.OneToOneField(Account,on_delete=models.CASCADE)
     profile_picture=models.ImageField(upload_to='user/profile_picture')

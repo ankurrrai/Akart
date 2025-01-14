@@ -21,12 +21,18 @@ from django.conf.urls.static import static #static imported for media files and 
 from django.conf import settings #import setting from main project which is akart here...
 
 urlpatterns = [
-    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
-    path('akart-akart-admin-akart/', admin.site.urls),
-    path('',view=views.home,name='home'),
+    # configure admin
+    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')), #dummy admin page and its track login attempt to prevent from hacking
+    path('akart-akart-secret-admin-akart/', admin.site.urls), #main admin page to keep secret
+    
+    # akart project view
+    path('',view=views.home,name='home'), 
     path('developer-profile/',view=views.developer,name='developer'),
+
+    # configure all apps url
     path('store/',include('store.urls')), #included store app urls
     path('cart/',include('carts.urls')), #include cart app urls
-    path('user/',include('accounts.urls')),
-    path('order/',include('orders.urls')),
-]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+    path('user/',include('accounts.urls')),#included accounts app urls
+    path('order/',include('orders.urls')),#included orders app urls
+
+]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) #static to use media url

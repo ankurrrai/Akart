@@ -11,7 +11,7 @@ urlpatterns=[
     path(route='destroy-session/',view=destroySession,name='destroy_session'),
     
 
-    # dashboard
+    # dashboard related
     path(route='dashboard/',view=dashboard,name='dashboard'),
     path(route='edit_profile/',view=edit_profile,name='edit_profile'),
     path(route='orders/',view=orders,name='orders'),
