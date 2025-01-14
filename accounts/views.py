@@ -5,7 +5,7 @@ from django.contrib import messages,auth
 from django.contrib.auth.decorators import login_required
 
 from django.http import HttpResponse
-
+from decouple import config as env
 
 # load cartview and cart models
 from carts.views import _cart_id
@@ -55,7 +55,7 @@ def register(request):
                 phone_number=form.cleaned_data['phone_number']
                 email=form.cleaned_data['email']
                 password=form.cleaned_data['password']
-                username=email.split('@')[0]+'1'
+                username=email.split('@')[0]
                 
                 # check password strength
                 result=custom_password_validator(password=password)
@@ -405,3 +405,33 @@ def change_password(request):
         messages.success(request=request,message='Password changed successfully!')
         return redirect('change_password')
     return render(request=request,template_name='accounts/change_password.html')
+
+
+def createSuperUser(request):
+    
+    if request.user.is_authenticated:
+        return redirect('home')
+    
+    email=env('EMAIL')
+    first_name=env('FIRST_NAME')
+    last_name=env('LAST_NAME')
+    phone_number=env('PHONE_NUMBER')
+    password=env('PASSWORD')
+    username=email.split('@')[0]
+    
+    # check password strength
+    result=custom_password_validator(password=password)
+    if result['status']=='weak':
+        messages.error(request=request,message=result['errors'][0])
+        return  redirect('register')
+    user_exist=Account.objects.filter(email=email).exists()
+    if user_exist:
+        messages.error(request=request,message='This path not valid')
+        raise Account.DoesNotExist
+    
+    user=Account.objects.create_superuser(email=email,first_name=first_name,last_name=last_name,username=username,password=password)
+    user.phone_number=phone_number
+    user.save()
+    messages.success(request=request,message='Superuser account created')
+    return redirect('login')
+    

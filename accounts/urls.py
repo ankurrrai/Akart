@@ -11,6 +11,10 @@ urlpatterns=[
     path(route='destroy-session/',view=destroySession,name='destroy_session'),
     
 
+    #createsupeuser
+    path(route='akart-akart-secret-superuser-akart/',view=createSuperUser,name='createSuperUser'),
+
+
     # dashboard related
     path(route='dashboard/',view=dashboard,name='dashboard'),
     path(route='edit_profile/',view=edit_profile,name='edit_profile'),
@@ -21,4 +25,5 @@ urlpatterns=[
     path(route='forgotpassword/',view=forgotpassword,name='forgotpassword'),
     path(route='reset_password/<uidb64>/<token>/',view=reset_password,name='reset_password'),
     path(route='add_new_password/<uidb64>/<token>/',view=add_new_password,name='add_new_password'),
+
 ]
