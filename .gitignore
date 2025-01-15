@@ -176,3 +176,7 @@ cython_debug/
 
 Resources/
 Resources
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
