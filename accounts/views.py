@@ -4,7 +4,7 @@ from .models import Account,UserDetails
 from django.contrib import messages,auth
 from django.contrib.auth.decorators import login_required
 
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from decouple import config as env
 
 # load cartview and cart models
@@ -407,11 +407,13 @@ def change_password(request):
     return render(request=request,template_name='accounts/change_password.html')
 
 
+# This is for create superuser
 def createSuperUser(request):
     
     if request.user.is_authenticated:
         return redirect('home')
     
+    # collect user details from env file
     email=env('EMAIL')
     first_name=env('FIRST_NAME')
     last_name=env('LAST_NAME')
@@ -426,7 +428,6 @@ def createSuperUser(request):
         return  redirect('register')
     user_exist=Account.objects.filter(email=email).exists()
     if user_exist:
-        messages.error(request=request,message='This path not valid')
         raise Account.DoesNotExist
     
     user=Account.objects.create_superuser(email=email,first_name=first_name,last_name=last_name,username=username,password=password)

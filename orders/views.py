@@ -11,7 +11,7 @@ from django.http import HttpResponse,JsonResponse
 
 import json,time,string,random
 
-
+# get_clent_ip is for collect the user ip address
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -20,6 +20,7 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+# using random and string to generate order number
 def generate_order_number():
     timestamp = int(time.time())  # Current timestamp
     random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
@@ -29,11 +30,14 @@ def generate_order_number():
 @login_required(login_url='login')
 def payments(request):
 
-    # collect body from client side i.e via fetch
+    # collect 'body' from client side i.e via fetch
     body=request.body
     details=json.loads(body)
 
+    #get the order using order_number
     order=Order.objects.get(order_number=details['orderID'])
+
+    #assign the payment details to the payment object
     payment=Payment()
     payment.payment_id=details['tarnscationID']
     payment.status=details['status']
@@ -43,6 +47,7 @@ def payments(request):
 
     payment.save()
 
+    # change the status and keep the payment id with order
     order.payment=payment
     order.is_ordered=True
     order.save()
@@ -116,6 +121,7 @@ def place_order(request,total=0,quantity=0,cart_items=None,grand_total=0,tax=0):
         form=OrderForm(request.POST)
         is_form_valid=form.is_valid()
         if is_form_valid:
+            # create new order object and assign the fields value
             order=Order()
             order.user=current_user
             order.first_name=form.cleaned_data['first_name']
@@ -138,6 +144,7 @@ def place_order(request,total=0,quantity=0,cart_items=None,grand_total=0,tax=0):
             order.order_number=order_number
             order.save()
 
+            # get again the order details with same order
             order=Order.objects.get(order_number=order_number,is_ordered=False,user=current_user)
             context={
                 'order':order,
@@ -148,6 +155,7 @@ def place_order(request,total=0,quantity=0,cart_items=None,grand_total=0,tax=0):
                
             }
 
+            # render payment page
             return render(request=request,template_name='orders/payments.html',context=context)
         else:
             return redirect('cart')
@@ -156,7 +164,12 @@ def place_order(request,total=0,quantity=0,cart_items=None,grand_total=0,tax=0):
     
 @login_required(login_url='login')
 def order_complete(request):
+    '''
+        Order complete is when payments successful then redirect to this url from client side
+        Also, it called from user orders section to check the invoice without displaysuccess
+    '''
     try:
+        # collect queries value
         orderId=request.GET.get('orderId')
         paymentId=request.GET.get('paymentId')
         displaySuccess=True
@@ -165,7 +178,8 @@ def order_complete(request):
                 displaySuccess=False
         except:
             pass
-
+        
+        # get order and paymnets from order_number and paymentId
         order=Order.objects.get(order_number=orderId,user=request.user)
         payment=Payment.objects.get(payment_id=paymentId,user=request.user)
         order_products=OrderProduct.objects.filter(order=order,payment=payment,user=request.user)

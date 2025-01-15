@@ -20,12 +20,14 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name
     
+    # avaerage rating for product
     def average_rating(self):
         review=RatingReview.objects.filter(product=self,status=True).aggregate(average=Avg('rating'))
         avg=0
         if review['average'] is not None:
             avg=float(review['average'])
         return avg
+    # count of rating for product
     def count_of_ratings(self):
         review=RatingReview.objects.filter(product=self,status=True).aggregate(count=Count('id'))
         count=0

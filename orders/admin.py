@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Payment,Order,OrderProduct
 
+# TabularInline is used display the tabular data below to another model
 class OrderProductInline(admin.TabularInline):
     model=OrderProduct
     readonly_fields=['payment','order','user','product','variation','product_price','quantity','is_ordered']

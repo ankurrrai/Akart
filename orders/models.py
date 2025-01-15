@@ -4,6 +4,7 @@ from accounts.models import Account
 from store.models import Product,Variation
 
 
+# Keep the details payment details
 class Payment(models.Model):
     user=models.ForeignKey(Account,on_delete=models.CASCADE)
     payment_id=models.CharField(max_length=100)
@@ -17,6 +18,7 @@ class Payment(models.Model):
         return self.payment_id
     
 
+# All order details
 class Order(models.Model):
     STATUS=[['Accepted','Accepted'],['Dispatched','Dispatched'] ,['Delivered','Delivered'],['Cancelled','Cancelled']]
 
@@ -55,7 +57,8 @@ class Order(models.Model):
 
     def __str__(self):
         return self.order_number
-    
+
+# Keep the cart prdouct here along with user,order and payment 
 class OrderProduct(models.Model):
     order=models.ForeignKey(Order,on_delete=models.CASCADE)
     payment=models.ForeignKey(Payment,on_delete=models.SET_NULL,blank=True,null=True)

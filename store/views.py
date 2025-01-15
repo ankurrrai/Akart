@@ -90,6 +90,11 @@ def serach_product(request):
 
 @login_required(login_url='login')
 def sumbit_review(request,product_id):
+    
+    '''
+        from forms.py if rating has done in past then update it and if its new then update with new
+    '''
+
     url=request.META.get('HTTP_REFERER')
     if request.method=='POST':
         order_product=OrderProduct.objects.filter(user=request.user,product__id=product_id).exists()
