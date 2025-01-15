@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', env('RENDER_EXTERNAL_HOSTNAME', '')]
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
 
 
 INSTALLED_APPS = [
