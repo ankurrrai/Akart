@@ -35,4 +35,4 @@ urlpatterns = [
     path('user/',include('accounts.urls')),#included accounts app urls
     path('order/',include('orders.urls')),#included orders app urls
 
-]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) #static to use media url
+]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) #static to use media url
