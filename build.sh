@@ -2,8 +2,7 @@
 # exit on error
 set -o errexit
 
-# Delete the database (if using SQLite)
-rm db.sqlite3
+
 
 # Delete migrations (except __init__.py)
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
