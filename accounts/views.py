@@ -433,6 +433,13 @@ def createSuperUser(request):
     user=Account.objects.create_superuser(email=email,first_name=first_name,last_name=last_name,username=username,password=password)
     user.phone_number=phone_number
     user.save()
+
+     # Default profile
+    user_detail=UserDetails()
+    user_detail.user=user
+    user_detail.profile_picture='default/default.png'
+    user_detail.save()
+    
     messages.success(request=request,message='Superuser account created')
     return redirect('login')
     

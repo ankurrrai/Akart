@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['akart-app-env.eba-fajmjksu.us-west-2.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost','akart.onrender.com']
 
 
 INSTALLED_APPS = [
@@ -150,4 +150,3 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
 # expiry
 PASSWORD_RESET_TIMEOUT=86400 #1day
-

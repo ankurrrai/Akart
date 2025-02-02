@@ -6,3 +6,4 @@ django-admin-thumbnails
 django-admin-honeypot
 django-session-timeout
 python-decouple
+gunicorn
