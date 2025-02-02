@@ -104,6 +104,7 @@ def remove_cart_item(request,product_id,cartItem_id):
 
 
 def load_cart(request,total=0,quantity=0,cart_items=None,grand_total=0,tax=0):
+    
     try:
         
         if request.user.is_authenticated:
